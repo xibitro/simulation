@@ -1,0 +1,43 @@
+name: Steam Indirim Kontrolü
+
+on:
+  workflow_dispatch: # Manuel olarak tetikleyebilmek için
+  schedule:
+    - cron: '0 */2 * * *' # Her 2 saatte bir çalıştırır (00:00, 02:00, 04:00...)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Yükle (Checkout)
+        uses: actions/checkout@v3
+
+      - name: Python Kurulumu
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # Python sürümü
+
+      - name: Kütüphaneleri Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Script'i Çalıştır
+        env:
+          # Gizli anahtarı script'e bu şekilde veriyoruz
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python steam_bot.py
+
+      # --- Bu bölüm, bot'un hafızasını (JSON) güncellemesi için HAYATİ ÖNEMDEDİR ---
+      - name: Değişiklikleri Kaydet (Commit)
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add bildirilen_oyunlar.json
+          # Sadece dosya değiştiyse commit at (boşuna hata vermemesi için)
+          git diff-index --quiet HEAD || git commit -m "Bildirilen oyunlar listesini güncelle"
+
+      - name: Değişiklikleri Depoya Gönder (Push)
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
