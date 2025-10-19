@@ -19,7 +19,7 @@ BILDIRILEN_OYUNLAR_DOSYASI = "bildirilen_oyunlar.json"
 # 1685 = "Co-op" (Eşli)
 # Diğer etiketler: 3841 = "Online Co-op", 7364 = "Local Co-op"
 # İstediğiniz etiketin ID'sini Steam'de aratıp URL'den bulabilirsiniz.
-STEAM_TAG_ID = "1685" 
+STEAM_TAG_ID = "599" 
 # --- AYARLAR SONU ---
 
 
@@ -49,7 +49,7 @@ def discord_bildirimi_gonder(oyun_adi, app_id, indirim_yuzdesi, eski_fiyat, yeni
     yeni_fiyat = yeni_fiyat.strip()
     
     data = {
-        "content": f"🎉 **'Eşli Oyun' İndirim Alarmı!** 🎉",
+        "content": f"🎉 **'Simülasyon' İndirim Alarmı!** 🎉",
         "embeds": [
             {
                 "title": f"🎮 {oyun_adi}",
@@ -155,3 +155,4 @@ if __name__ == "__main__":
     else:
 
         indirimleri_kontrol_et()
+
